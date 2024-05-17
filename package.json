@@ -1,0 +1,57 @@
+{
+  "name": "unity-auto-compile",
+  "displayName": "Unity Auto-Compile",
+  "description": "Automatic Compilation for Unity on Save File ",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.89.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "keybindings":[
+      {
+        "command": "unity-auto-compile.action", 
+        "key": "ctrl+s"
+      },
+      {
+        "command": "unity-auto-compile.activeExtension",
+        "key": "ctrl+a"
+      }
+    ],
+    "commands":[
+      {
+        "command": "unity-auto-compile.activeExtension",
+        "title": "Active Extension",
+        "category": "Unity Auto Compile"
+      },
+      {
+        "command": "unity-auto-compile.display_path",
+        "title": "Display Path",
+        "category": "Unity Auto Compile"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.89.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5",
+    "@vscode/test-cli": "^0.0.8",
+    "@vscode/test-electron": "^2.3.9"
+  }
+}

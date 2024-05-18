@@ -1,8 +1,8 @@
 {
   "name": "unity-auto-compile",
   "displayName": "Unity Auto-Compile",
-  "description": "Automatic Compilation for Unity on Save File ",
-  "version": "0.0.1",
+  "description": "Automatic Compilation for Unity on File Save.",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.89.0"
   },
@@ -13,26 +13,8 @@
   "main": "./out/extension.js",
   "contributes": {
     "keybindings":[
-      {
-        "command": "unity-auto-compile.action", 
-        "key": "ctrl+s"
-      },
-      {
-        "command": "unity-auto-compile.activeExtension",
-        "key": "ctrl+a"
-      }
     ],
     "commands":[
-      {
-        "command": "unity-auto-compile.activeExtension",
-        "title": "Active Extension",
-        "category": "Unity Auto Compile"
-      },
-      {
-        "command": "unity-auto-compile.display_path",
-        "title": "Display Path",
-        "category": "Unity Auto Compile"
-      }
     ]
   },
   "scripts": {

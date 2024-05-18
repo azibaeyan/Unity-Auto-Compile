@@ -14,7 +14,6 @@ const WindowMode = "windowMode.bat";
 
 // let WriteFile_res : Function;
 let WriteFile_res : (value: string | PromiseLike<string>) => void;
-let WriteFile_rej : (reason?: void) => void;
 
 const {exec} = require("node:child_process"); // ComandLine Process
 
@@ -88,7 +87,6 @@ async function WriteFile(dir: string, fileName: string, content: string) : Promi
 	};
 
 	// Redirecting
-	// exec(`cd /d ${dir}`, responeHandler);
 	await new Promise<string>((resolve, reject) => {
 		// Set Resolve Method Reference
 		res = resolve;
@@ -97,7 +95,6 @@ async function WriteFile(dir: string, fileName: string, content: string) : Promi
 	}).catch((err) => {console.log(err);});
 
 	// Creating / Empty File
-	// exec(`cd /d ${dir} & echo. > ${fileName}`, responeHandler); // Create / Empty File
 	await new Promise<string>((resolve, reject) => {
 		// Set Resolve Method Reference
 		res = resolve;
@@ -144,7 +141,6 @@ async function WriteFile(dir: string, fileName: string, content: string) : Promi
 			temp = "";
 		}
 		else if (content[i] === '^' || content[i] === '<' || content[i] === '>' || content[i] === '|' || content[i] === '&') { temp += ((ContainsSubStr(temp, '\"')) ? '' : '^') + content[i]; }
-		// else if (content[i] === '\"' || content[i] === '\'') { temp += '\\' + content[i]; }
 		else { temp += content[i]; }
 	}
 
@@ -172,14 +168,12 @@ async function CreateRequirements()
 	await new Promise<string>((resolve, reject) => {
 		// Set WriteFile Resolve Reference
 		WriteFile_res = resolve;
-		WriteFile_rej = reject;
 		WriteFile(root, SendKeys, SendKeys_code);
 	}).catch((err) => { console.log(err); });
 
 	await new Promise<string>((resolve, reject) => {
 		// Set WriteFile Resolve Reference
 		WriteFile_res = resolve;
-		WriteFile_rej = reject;
 		WriteFile(root, WindowMode, WindowMode_code);
 	}).catch((err) => { console.log(err); });
 }
@@ -187,20 +181,25 @@ async function CreateRequirements()
 export function activate(context: vscode.ExtensionContext) 
 {
 	vscode.window.showInformationMessage("Extension has been Actived!"); // Activation Message
+	
+	CreateRequirements(); // Create sendKeys.bat & windowMode.bat files
+	
+	vscode.workspace.onDidChangeTextDocument((e) => {
+		if (e.document.isDirty) { fileChanged = true; }
+		else 
+		{ 
+			if (e.contentChanges.length !== 0) { fileChanged = false; } // Change File Status if Save Command is not Called
+		}
+	});
 
-	vscode.workspace.onDidChangeTextDocument((e) => 
-	{ 
-		fileChanged = true; 
-	}); 
-
-	CreateRequirements();
-
+	
 	// Display Path Command
 	context.subscriptions.push(
 		vscode.commands.registerCommand("unity-auto-compile.display_path", () => {
 			vscode.window.showInformationMessage(`path: ${root}`);
 		})
 	);
+	
 
 	// Activation Command
 	context.subscriptions.push(
@@ -216,13 +215,12 @@ export function activate(context: vscode.ExtensionContext)
 			console.log(`winModeHandler(err): ${stderr} : ${winModeCommand}`);
 			return;
 		}
-		console.log(`winModeHandler(log): ${stdout} : ${winModeCommand}`);
 	};
 
 	// Main Action
 	let action = async () => 
 	{
-		vscode.window.activeTextEditor?.document.save(); // Save Active Document
+		const activeEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
 
 		let isUnityWorkspace : boolean = false;
 
@@ -249,14 +247,10 @@ export function activate(context: vscode.ExtensionContext)
 			else { return; }
 		});
 
-		if (!isUnityWorkspace) 
-		{
-			vscode.window.showErrorMessage("NOT UNITY WORKSPACE!");  
-			return; 
-		}
-		if (!fileChanged) { return; }	
-		fileChanged = false;
-		setTimeout(() => { act(); }, 1000);
+		if (!isUnityWorkspace || !fileChanged) { return; }
+		fileChanged = false; // Update Status
+
+		setTimeout(() => { act(); }, 1000); // Delay After Save File
 		let act = () => 
 		{
 			vscode.window.showInformationMessage("Action"); // debug
@@ -269,7 +263,6 @@ export function activate(context: vscode.ExtensionContext)
 					return; 
 				}
 				if (ContainsSubStr(stdout, "Failed")) { exec(winModeCommand, winModeHandler); }
-				console.log(`stdout: ${stdout}`);
 			});
 			setTimeout(() => { exec(`call ${root}\\${SendKeys} "${vscode.window.activeTextEditor?.document.fileName}" ""`, 
 				(err: any, stdout: any, stderr: any) => {
@@ -280,9 +273,13 @@ export function activate(context: vscode.ExtensionContext)
 						return;
 					}
 				}
-			); }, 500);
+				); 
+			vscode.window.activeTextEditor = activeEditor;
+			}, 400 ); // Delay After Focus
 		};
 	};
+
+	vscode.workspace.onDidSaveTextDocument((e) => { action(); });
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("unity-auto-compile.action", action)

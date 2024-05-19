@@ -180,7 +180,7 @@ async function CreateRequirements()
 
 function GetFileName(path : string | undefined) : string
 {
-	if (path === undefined) { return ""; }
+	if (path === '' || path === undefined) { return ""; }
 	let result : string = "";
 	for (let i = path.length - 1; i >= 0; i--)
 	{
@@ -188,6 +188,19 @@ function GetFileName(path : string | undefined) : string
 		result = path[i].concat(result);
 	}
 	return result;
+}
+
+function GetFileFormat(path : string | undefined) : string | undefined
+{
+	if (path === '' || path === undefined) { return undefined; }
+	let format : string = '';
+	for (let i = path.length - 1; i >= 0; i--)
+	{
+		if (path[i] === '.') { return format; }
+		else if (path === '\\') { break; }
+		else { format = path[i].concat(format); }
+	}
+	return undefined;
 }
 
 export function activate(context: vscode.ExtensionContext) 
@@ -225,6 +238,10 @@ export function activate(context: vscode.ExtensionContext)
 	{
 		const activeEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
 		if (activeEditor === undefined) { return; }
+
+		// Check Active Editor File Format
+		const fileFormat : string | undefined = GetFileFormat(activeEditor.document.fileName);
+		if (fileFormat === undefined || fileFormat !== 'cs') { return; }
 
 		let isUnityWorkspace : boolean = false;
 

@@ -3,6 +3,8 @@
   "displayName": "Unity Auto-Compile",
   "description": "Automatic Compilation for Unity on File Save.",
   "version": "1.0.0",
+  "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaUc8pPWxioEzmdNYvzDAymahSuww76LiuVqwULwo_yA&s",
+  "publisher": "Alireza Zibaeyan",
   "repository": {
     "url": "https://github.com/azibaeyan/Unity-Auto-Compile"
   },

@@ -20,6 +20,11 @@
     "keybindings":[
     ],
     "commands":[
+      {
+        "title": "Active Auto-Compile",
+        "category": "Unity Auto-Compile",
+        "command": "unity-auto-compile.action"
+      }
     ]
   },
   "scripts": {

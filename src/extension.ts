@@ -180,7 +180,7 @@ async function CreateRequirements()
 
 export function activate(context: vscode.ExtensionContext) 
 {
-	vscode.window.showInformationMessage("Extension has been Actived!"); // Activation Message
+	vscode.window.showInformationMessage("Unity Auto-Compile has been Actived."); // Activation Message
 	
 	CreateRequirements(); // Create sendKeys.bat & windowMode.bat files
 	
@@ -191,16 +191,7 @@ export function activate(context: vscode.ExtensionContext)
 			if (e.contentChanges.length !== 0) { fileChanged = false; } // Change File Status if Save Command is not Called
 		}
 	});
-
 	
-	// Display Path Command
-	context.subscriptions.push(
-		vscode.commands.registerCommand("unity-auto-compile.display_path", () => {
-			vscode.window.showInformationMessage(`path: ${root}`);
-		})
-	);
-	
-
 	// Activation Command
 	context.subscriptions.push(
 		vscode.commands.registerCommand("unity-auto-compile.activeExtension", 
@@ -253,7 +244,6 @@ export function activate(context: vscode.ExtensionContext)
 		setTimeout(() => { act(); }, 1000); // Delay After Save File
 		let act = () => 
 		{
-			vscode.window.showInformationMessage("Action"); // debug
 			let command : string = `call ${root}\\${SendKeys} "${vscode.workspace.name} -" ""`;
 			exec(command, (err: any, stdout: any, stderr: any) => {
 				if (err) 

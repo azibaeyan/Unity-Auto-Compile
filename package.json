@@ -2,7 +2,7 @@
   "name": "unity-autocompile",
   "displayName": "Unity Auto-Compile",
   "description": "Automatic Compilation for Unity on File Save.",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "icon": "images/unity_auto_compile.jpg",
   "publisher": "AlirezaZibaeyan",
   "repository": {

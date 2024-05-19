@@ -178,6 +178,18 @@ async function CreateRequirements()
 	}).catch((err) => { console.log(err); });
 }
 
+function GetFileName(path : string | undefined) : string
+{
+	if (path === undefined) { return ""; }
+	let result : string = "";
+	for (let i = path.length - 1; i >= 0; i--)
+	{
+		if (path[i] === '\\') { break; }
+		result = path[i].concat(result);
+	}
+	return result;
+}
+
 export function activate(context: vscode.ExtensionContext) 
 {
 	vscode.window.showInformationMessage("Unity Auto-Compile has been Actived."); // Activation Message
@@ -212,6 +224,7 @@ export function activate(context: vscode.ExtensionContext)
 	let action = async () => 
 	{
 		const activeEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
+		if (activeEditor === undefined) { return; }
 
 		let isUnityWorkspace : boolean = false;
 
@@ -254,7 +267,7 @@ export function activate(context: vscode.ExtensionContext)
 				}
 				if (ContainsSubStr(stdout, "Failed")) { exec(winModeCommand, winModeHandler); }
 			});
-			setTimeout(() => { exec(`call ${root}\\${SendKeys} "${vscode.window.activeTextEditor?.document.fileName}" ""`, 
+			setTimeout(() => { exec(`call ${root}\\${SendKeys} "${GetFileName(vscode.window.activeTextEditor?.document.fileName)}" ""`, 
 				(err: any, stdout: any, stderr: any) => {
 					if (ContainsSubStr(stdout, "Failed"))
 					{

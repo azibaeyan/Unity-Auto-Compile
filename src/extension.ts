@@ -299,7 +299,10 @@ export function activate(context: vscode.ExtensionContext)
 		};
 	};
 
-	vscode.workspace.onDidSaveTextDocument((e) => { action(); });
+	// Set OnSave Event
+	vscode.workspace.onDidSaveTextDocument((e) => { 
+		if (vscode.window.activeTextEditor !== undefined && vscode.window.activeTextEditor.document === e) { action(); } 
+	});
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("unity-auto-compile.action", action)

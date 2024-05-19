@@ -1,8 +1,11 @@
 # Unity Auto-Compile 
 
-An Extension for Compile Automation in VS Code for Unity scripting.
-This Extension only Focuses on Unity Editor to make it compile.
+A VS Code Extension for Compile Automation in Unity scripting.
+The Extension activates the Editor windows to make it compile when ever developer saves a file.
 
-## Limitation 
+## Note
 
-This Extension only works on Windows.
+Extension only works on Windows Systems.
+
+It writes 2 batch files: sendKeys.bat & windowMode.bat
+in directory: C:\Users\%USERNAME%\AppData\Local\Programs\Microsoft VS Code

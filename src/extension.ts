@@ -205,8 +205,6 @@ function GetFileFormat(path : string | undefined) : string | undefined
 
 export function activate(context: vscode.ExtensionContext) 
 {
-	vscode.window.showInformationMessage("Unity Auto-Compile has been Actived."); // Activation Message
-	
 	CreateRequirements(); // Create sendKeys.bat & windowMode.bat files
 	
 	vscode.workspace.onDidChangeTextDocument((e) => {

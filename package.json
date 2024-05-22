@@ -2,8 +2,8 @@
   "name": "unity-autocompile",
   "displayName": "Unity Auto-Compile",
   "description": "Automatic Compilation for Unity on File Save.",
-  "version": "1.0.4",
-  "icon": "images/unity_auto_compile.jpg",
+  "version": "1.0.5",
+  "icon": "assets/unity_auto_compile.jpg",
   "publisher": "AlirezaZibaeyan",
   "repository": {
     "url": "https://github.com/azibaeyan/Unity-Auto-Compile"
@@ -14,7 +14,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "workspaceContains:Assets"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "keybindings":[

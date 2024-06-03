@@ -203,12 +203,19 @@ function GetFileFormat(path : string | undefined) : string | undefined
 	return undefined;
 }
 
+var Timer : NodeJS.Timeout | undefined = undefined;
+
 export function activate(context: vscode.ExtensionContext) 
 {
 	CreateRequirements(); // Create sendKeys.bat & windowMode.bat files
+
 	
 	vscode.workspace.onDidChangeTextDocument((e) => {
-		if (e.document.isDirty) { fileChanged = true; }
+		if (e.document.isDirty) 
+		{ 
+			fileChanged = true; 
+			if (Timer !== undefined) { Timer.refresh(); }
+		}
 		else 
 		{ 
 			if (e.contentChanges.length !== 0) { fileChanged = false; } // Change File Status if Save Command is not Called
@@ -235,7 +242,7 @@ export function activate(context: vscode.ExtensionContext)
 	let action = async () => 
 	{
 		const activeEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
-		if (activeEditor === undefined) { return; }
+		if (activeEditor === undefined || Timer !== undefined) { return; }
 
 		// Check Active Editor File Format
 		const fileFormat : string | undefined = GetFileFormat(activeEditor.document.fileName);
@@ -269,7 +276,7 @@ export function activate(context: vscode.ExtensionContext)
 		if (!isUnityWorkspace || !fileChanged) { return; }
 		fileChanged = false; // Update Status
 
-		setTimeout(() => { act(); }, 1000); // Delay After Save File
+		Timer = setTimeout(() => { act(); }, 3000); // Delay After Save File
 		let act = () => 
 		{
 			let command : string = `call ${root}\\${SendKeys} "${vscode.workspace.name} -" ""`;
@@ -294,6 +301,7 @@ export function activate(context: vscode.ExtensionContext)
 				); 
 			vscode.window.activeTextEditor = activeEditor;
 			}, 400 ); // Delay After Focus
+			Timer = undefined;
 		};
 	};
 
